@@ -1,0 +1,47 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Guest {
+  attendanceStatus Boolean?
+  createdAt        DateTime          @default(now())
+  email            String?
+  guestAttendances GuestAttendance[]
+  id               String            @id @default(cuid())
+  name             String?
+  phone            String?
+  updatedAt        DateTime          @updatedAt
+}
+
+model Invitation {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  link      String?
+  updatedAt DateTime @updatedAt
+}
+
+model GuestAttendance {
+  createdAt DateTime @default(now())
+  guest     Guest?   @relation(fields: [guestId], references: [id])
+  guestId   String?
+  id        String   @id @default(cuid())
+  isPresent Boolean?
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
